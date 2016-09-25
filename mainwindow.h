@@ -5,6 +5,7 @@
 #include "db/dbconnection.h"
 #include "forms/patientslistwidget.h"
 #include "forms/patientresearchslist.h"
+#include "forms/researchwidget.h"
 
 namespace Ui {
 class MainWindow;
@@ -23,6 +24,7 @@ private:
     DBCOnnection m_db_connection;
     PatientsListWidget m_patients_list;
     PatientResearchsList m_research_list;
+    ResearchWidget m_research;
 };
 
 #endif // MAINWINDOW_H

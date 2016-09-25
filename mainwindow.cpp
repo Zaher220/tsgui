@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->verticalLayoutPatients->addWidget(&m_patients_list);
     ui->verticalLayoutResearchs->addWidget(&m_research_list);
+    ui->verticalLayoutNewResearch->addWidget(&m_research);
 
     connect(&m_patients_list, &PatientsListWidget::patientId, &m_research_list, &PatientResearchsList::setPatiendId);
 }

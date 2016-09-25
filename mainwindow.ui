@@ -21,6 +21,9 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayoutResearchs"/>
     </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayoutNewResearch"/>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">

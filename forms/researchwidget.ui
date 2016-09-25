@@ -189,21 +189,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="breakExamButton">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Прервать</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="resultsButton">
         <property name="enabled">
          <bool>false</bool>

@@ -19,7 +19,16 @@ SOURCES += main.cpp\
     forms/patientslistwidget.cpp \
     forms/researchwidget.cpp \
     forms/startwidget.cpp \
-    db/dbconnection.cpp
+    db/dbconnection.cpp \
+    device/ADCDataReader.cpp \
+    device/calibrator.cpp \
+    device/datahoarder.cpp \
+    device/ioton.cpp \
+    device/main.cpp \
+    device/signalconverter.cpp \
+    device/temperatureparameerscalulator.cpp \
+    device/analyze/signalanalyzer.cpp \
+    device/analyze/volumevaluescalc.cpp
 
 HEADERS  += mainwindow.h \
     forms/patientprofilewidget.h \
@@ -27,7 +36,17 @@ HEADERS  += mainwindow.h \
     forms/patientslistwidget.h \
     forms/researchwidget.h \
     forms/startwidget.h \
-    db/dbconnection.h
+    db/dbconnection.h \
+    device/ADCDataReader.h \
+    device/calibrator.h \
+    device/datahoarder.h \
+    device/datatypes.h \
+    device/ioton.h \
+    device/Rtusbapi.h \
+    device/signalconverter.h \
+    device/temperatureparameerscalulator.h \
+    device/analyze/signalanalyzer.h \
+    device/analyze/volumevaluescalc.h
 
 FORMS    += mainwindow.ui \
     forms/patientprofilewidget.ui \
@@ -35,3 +54,11 @@ FORMS    += mainwindow.ui \
     forms/patientslistwidget.ui \
     forms/researchwidget.ui \
     forms/startwidget.ui
+
+win32: LIBS += -L$$PWD/device/lib/ -lRtusbapi
+
+INCLUDEPATH += $$PWD/device
+DEPENDPATH += $$PWD/device
+
+CONFIG += c++14
+

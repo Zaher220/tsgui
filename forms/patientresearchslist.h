@@ -17,6 +17,7 @@ public:
     ~PatientResearchsList();
 signals:
     void ResearchId(int);
+    void newResearch();
 public slots:
     void setPatiendId(int id);
     void setCurrentResearch(QModelIndex index);
