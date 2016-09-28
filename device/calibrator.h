@@ -12,7 +12,7 @@ public:
     explicit Calibrator(QObject *parent = 0);
     void setVolume_coff(double value);
 signals:
-
+    void SignalsParams(parameters params, ADCData data);
 public slots:
     void signalAndParams(parameters params, ADCData data);
 private:

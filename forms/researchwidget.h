@@ -17,7 +17,13 @@ public:
     ~ResearchWidget();
 public slots:
     void newResearch(int id_patient);
+private slots:
+    void on_startExam_clicked();
+    void on_stopExam_clicked();
+    void setSignalsAndParams(parameters params, ADCData data);
 private:
+    void setPramsToWidget(parameters params);
+    void setSensorSignals(ADCData data);
     Ui::ResearchWidget *ui;
     Ioton m_device;
     int m_patient_id = -1;

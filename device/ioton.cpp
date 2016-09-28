@@ -22,6 +22,8 @@ Ioton::Ioton(QObject *parent) : QObject(parent)
     connect(m_analyzer, &SignalAnalyzer::Inhalations, m_calculator, &VolumeValuesCalc::setIngs);
     connect(m_calculator, &VolumeValuesCalc::signalParameters, m_calibrator, &Calibrator::signalAndParams);
 
+    connect(m_calibrator, &Calibrator::SignalsParams, this, &Ioton::setSignalsAndParams);
+
     adc->moveToThread(&m_thread);
 
     m_hoarder->moveToThread(&m_thread);
@@ -59,4 +61,9 @@ void Ioton::appendData(ADCData data)
 {
     m_signal_converter->setADCData(data);
     //m_hoarder->setADCData(data);
+}
+
+void Ioton::setSignalsAndParams(parameters params, ADCData data)
+{
+    emit sendSignalsAndParams(params, data);
 }

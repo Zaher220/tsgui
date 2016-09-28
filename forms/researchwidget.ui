@@ -162,6 +162,9 @@
       </property>
       <item>
        <widget class="QPushButton" name="startExam">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>14</pointsize>
@@ -176,6 +179,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="stopExam">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>14</pointsize>
@@ -205,6 +211,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="printButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>14</pointsize>
@@ -217,6 +226,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="backExamButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>14</pointsize>

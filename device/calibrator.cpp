@@ -11,6 +11,7 @@ void Calibrator::signalAndParams(parameters params, ADCData data)
     m_params.debug();
     qDebug()<<"---------------------";
     this->calibrateVolumeParams();
+    emit SignalsParams(params, data);
 }
 
 void Calibrator::loadSettings()
