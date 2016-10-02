@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include "mainwindow.h"
 #include <QApplication>
 

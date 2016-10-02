@@ -63,18 +63,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="backPatientProfileButton">
-         <property name="font">
-          <font>
-           <pointsize>14</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Назад</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <spacer name="verticalSpacer_8">
          <property name="orientation">
           <enum>Qt::Vertical</enum>

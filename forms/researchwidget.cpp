@@ -7,6 +7,7 @@ ResearchWidget::ResearchWidget(QWidget *parent) :
 {
     ui->setupUi(this);
     connect(&m_device, &Ioton::sendSignalsAndParams, this, &ResearchWidget::setSignalsAndParams);
+    ui->verticalLayoutAllPlotter->addWidget(&m_gpkotter);
 }
 
 ResearchWidget::~ResearchWidget()
@@ -32,15 +33,15 @@ void ResearchWidget::on_stopExam_clicked()
 
 void ResearchWidget::setSignalsAndParams(parameters params, ADCData data)
 {
-;
+    ;
 }
 
 void ResearchWidget::setPramsToWidget(parameters params)
 {
-;
+    ;
 }
 
 void ResearchWidget::setSensorSignals(ADCData data)
 {
-;
+    ;
 }

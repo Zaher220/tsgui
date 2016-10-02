@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include "device/ioton.h"
+#include "graphsplotter3.h"
+#include "qcustomplot.h"
 
 namespace Ui {
 class ResearchWidget;
@@ -24,6 +26,7 @@ private slots:
 private:
     void setPramsToWidget(parameters params);
     void setSensorSignals(ADCData data);
+    GraphsPlotter3 m_gpkotter;
     Ui::ResearchWidget *ui;
     Ioton m_device;
     int m_patient_id = -1;

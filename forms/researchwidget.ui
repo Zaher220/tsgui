@@ -42,11 +42,6 @@
      </item>
      <item>
       <layout class="QGridLayout" name="gridLayout_4">
-       <item row="0" column="0">
-        <widget class="QWidget" name="PlotterAllwidget" native="true">
-         <layout class="QVBoxLayout" name="verticalLayout_9"/>
-        </widget>
-       </item>
        <item row="0" column="1">
         <layout class="QVBoxLayout" name="verticalLayout_10">
          <item>
@@ -112,6 +107,9 @@
          </item>
         </layout>
        </item>
+       <item row="0" column="0">
+        <layout class="QVBoxLayout" name="verticalLayoutAllPlotter"/>
+       </item>
       </layout>
      </item>
     </layout>
@@ -125,6 +123,12 @@
       <size>
        <width>350</width>
        <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>300</width>
+       <height>16777215</height>
       </size>
      </property>
      <property name="font">
@@ -221,21 +225,6 @@
         </property>
         <property name="text">
          <string>Печать</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="backExamButton">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Назад</string>
         </property>
        </widget>
       </item>
@@ -363,7 +352,7 @@
        <widget class="QTableWidget" name="resultsTable">
         <property name="minimumSize">
          <size>
-          <width>350</width>
+          <width>0</width>
           <height>350</height>
          </size>
         </property>

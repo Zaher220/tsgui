@@ -17,7 +17,6 @@ SOURCES += main.cpp\
         forms/patientresearchslist.cpp \
         forms/patientslistwidget.cpp \
         forms/researchwidget.cpp \
-        forms/startwidget.cpp \
         db/dbconnection.cpp \
         device/ADCDataReader.cpp \
         device/calibrator.cpp \
@@ -28,14 +27,14 @@ SOURCES += main.cpp\
         device/temperatureparameerscalulator.cpp \
         device/analyze/signalanalyzer.cpp \
         device/analyze/volumevaluescalc.cpp \
-        qcustomplot.cpp
+        qcustomplot.cpp \
+    forms/graphsplotter3.cpp
 
 HEADERS  += mainwindow.h \
         forms/patientprofilewidget.h \
         forms/patientresearchslist.h \
         forms/patientslistwidget.h \
         forms/researchwidget.h \
-        forms/startwidget.h \
         db/dbconnection.h \
         device/ADCDataReader.h \
         device/calibrator.h \
@@ -47,19 +46,20 @@ HEADERS  += mainwindow.h \
         device/temperatureparameerscalulator.h \
         device/analyze/signalanalyzer.h \
         device/analyze/volumevaluescalc.h \
-        qcustomplot.h
+        qcustomplot.h \
+    forms/graphsplotter3.h
 
 FORMS    += mainwindow.ui \
         forms/patientprofilewidget.ui \
         forms/patientresearchslist.ui \
         forms/patientslistwidget.ui \
         forms/researchwidget.ui \
-        forms/startwidget.ui
+    forms/graphsplotter3.ui
 
 win32: LIBS += -L$$PWD/device/lib/ -lRtusbapi
 
 INCLUDEPATH += $$PWD/device
 DEPENDPATH += $$PWD/device
 
-CONFIG += c++14
+CONFIG += c++17
 

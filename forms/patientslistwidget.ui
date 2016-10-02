@@ -24,7 +24,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Открыть профиль пациента</string>
+      <string>Пациенты</string>
      </property>
     </widget>
    </item>
@@ -44,28 +44,33 @@
     </widget>
    </item>
    <item>
-    <widget class="QLineEdit" name="nameFilterEdit">
-     <property name="font">
-      <font>
-       <pointsize>14</pointsize>
-      </font>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLineEdit" name="nameFilterEdit">
+       <property name="font">
+        <font>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonCreatePatient">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Добавить пациента</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QTableView" name="patientsTableView"/>
-   </item>
-   <item>
-    <widget class="QPushButton" name="backPatientListButton">
-     <property name="font">
-      <font>
-       <pointsize>14</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Назад</string>
-     </property>
-    </widget>
    </item>
   </layout>
  </widget>
