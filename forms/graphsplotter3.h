@@ -4,8 +4,7 @@
 #include <QWidget>
 #include "qcustomplot.h"
 #include "datatypes.h"
-//#include "examscontrollerl.h"
-//#include "ui_plotterwidjet.h"
+
 namespace Ui {
 class PlotterWidjet;
 }
@@ -19,13 +18,12 @@ public:
     ~GraphsPlotter3();
     void appendData(QVector<QVector<double > > data);
     void appendIntData(QVector<int> volume, QVector<int> tempin, QVector<int> tempout);
+    void appendADCData(ADCData data);
     void reset();
 private slots:
     void on_PlotHorizontalScrollBar_valueChanged(int value);
     void xAxisChanged(QCPRange range);
-
     void setFullPatientGrapgicsData(VTT_Data data);
-
 private:
     void initGraphs(QCustomPlot *graph, QPen pen);
     Ui::PlotterWidjet *ui;

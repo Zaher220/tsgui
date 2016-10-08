@@ -8,6 +8,7 @@ ResearchWidget::ResearchWidget(QWidget *parent) :
     ui->setupUi(this);
     connect(&m_device, &Ioton::sendSignalsAndParams, this, &ResearchWidget::setSignalsAndParams);
     ui->verticalLayoutAllPlotter->addWidget(&m_gpkotter);
+    //m_gpkotter.appendData()
 }
 
 ResearchWidget::~ResearchWidget()
@@ -19,6 +20,11 @@ void ResearchWidget::newResearch(int id_patient)
 {
     if (id_patient <= 0)
         return;
+}
+
+void ResearchWidget::setPatiendId(int pid)
+{
+
 }
 
 void ResearchWidget::on_startExam_clicked()
@@ -33,7 +39,7 @@ void ResearchWidget::on_stopExam_clicked()
 
 void ResearchWidget::setSignalsAndParams(parameters params, ADCData data)
 {
-    ;
+    m_gpkotter.appendADCData(data);
 }
 
 void ResearchWidget::setPramsToWidget(parameters params)

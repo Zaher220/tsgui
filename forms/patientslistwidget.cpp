@@ -40,5 +40,6 @@ void PatientsListWidget::setCurrentPatient(QModelIndex index)
 {
     QSqlRecord record = m_patients->record(index.row());
     int id_patient = record.value(0).toInt();
+    emit gotoPatient();
     emit patientId(id_patient);
 }

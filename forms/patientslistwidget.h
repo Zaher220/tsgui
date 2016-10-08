@@ -17,6 +17,7 @@ public:
     ~PatientsListWidget();
 signals:
     void patientId(int);
+    void gotoPatient();
 private slots:
     void setCurrentPatient(QModelIndex index);
 private:

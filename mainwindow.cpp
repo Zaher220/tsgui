@@ -11,14 +11,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pagePatients->layout()->addWidget(&m_patients_list);
     ui->pageResearch->layout()->addWidget(&m_research);
 
-    ui->comboBox->addItem(tr("Page 1"));
-    ui->comboBox->addItem(tr("Page 2"));
-    ui->comboBox->addItem(tr("Page 3"));
-    ui->comboBox->addItem(tr("Page 4"));
-    ui->comboBox->addItem(tr("Page 5"));
-
-    connect(ui->comboBox, SIGNAL(activated(int)), ui->stackedWidgetPages, SLOT(setCurrentIndex(int)));
     connect(&m_patients_list, &PatientsListWidget::patientId, &m_research_list, &PatientResearchsList::setPatiendId);
+    connect(&m_patients_list, &PatientsListWidget::patientId, &m_research, &ResearchWidget::setPatiendId);
+    connect(&m_patients_list, &PatientsListWidget::gotoPatient, this, &MainWindow::setPatient);
+    connect(&m_research_list, &PatientResearchsList::newResearch, this, &MainWindow::setNewResearch);
 }
 
 MainWindow::~MainWindow()
@@ -28,6 +24,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButtonBack_clicked()
 {
-    size_t index = ui->stackedWidgetPages->currentIndex()-1;
+    size_t index = ui->stackedWidgetPages->currentIndex() - 1;
     ui->stackedWidgetPages->setCurrentIndex(index);
+}
+
+void MainWindow::setPatient()
+{
+    ui->stackedWidgetPages->setCurrentIndex(1);
+}
+
+void MainWindow::setNewResearch()
+{
+    ui->stackedWidgetPages->setCurrentIndex(2);
 }

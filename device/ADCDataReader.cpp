@@ -268,8 +268,7 @@ void ADCDataReader::ShowThreadErrorMessage(void)
 void ADCDataReader::CleanupCrushADCInstance(QString ErrorString)
 {
     // подчищаем интерфейс модуля
-    if (pModule)
-    {
+    if (pModule){
         // освободим интерфейс модуля
         if (!pModule->ReleaseInstance())
             printf(" ReleaseInstance() --> Bad\n");
@@ -283,7 +282,6 @@ void ADCDataReader::CleanupCrushADCInstance(QString ErrorString)
         CloseHandle(hReadThread);
         hReadThread = NULL;
     }
-
     // выводим текст сообщения
     if ( ErrorString.length() > 0 )
         printf("%s",ErrorString.toStdString().c_str());
@@ -298,7 +296,6 @@ void ADCDataReader::startADC(int samples_number)
     initADC();
     // сбросим флаг ошибок потока ввода данных
     ThreadErrorNumber = 0x0;
-
     connect(this, &ADCDataReader::started, this, &ADCDataReader::processADC);
     emit started();
 }

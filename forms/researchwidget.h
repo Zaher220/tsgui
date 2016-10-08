@@ -19,6 +19,7 @@ public:
     ~ResearchWidget();
 public slots:
     void newResearch(int id_patient);
+    void setPatiendId(int pid);
 private slots:
     void on_startExam_clicked();
     void on_stopExam_clicked();

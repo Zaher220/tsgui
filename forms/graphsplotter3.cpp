@@ -85,11 +85,20 @@ void GraphsPlotter3::setFullPatientGrapgicsData(VTT_Data data)
     this->appendData(graph);
 }
 
+QVector<double> convertToDoubleVector2(QVector<int> data){
+    QVector<double> result;
+    result.reserve(data.size());
+    foreach (auto &val, data){
+        result.push_back(val);
+    }
+    return result;
+}
+
 void GraphsPlotter3::appendData(QVector<QVector<double> > data)
 {
     if( data.size() != 3 )
         return;
-    
+
     m_vol.append(data[0]);
     m_tin.append(data[1]);
     m_tout.append(data[2]);
@@ -152,6 +161,43 @@ void GraphsPlotter3::appendIntData(QVector<int> volume, QVector<int> tempin, QVe
     }
     this->appendData(plotData);
     //m_plotter_widjet->appendData( plotData );
+}
+
+void GraphsPlotter3::appendADCData(ADCData data)
+{
+    if( data.DATA_LEN != 3 )
+        return;
+    m_vol.append(convertToDoubleVector2(data.data[0]));
+    m_tin.append(convertToDoubleVector2(data.data[1]));
+    m_tout.append(convertToDoubleVector2(data.data[2]));
+
+    K = m_vol.size();
+    l = (double)N/K;
+    qDebug()<<"l="<<l;
+
+    QVector<double> x(m_vol.size());
+
+    for(int i = 0; i < x.size(); i++){
+        x[i] = i;
+    }
+
+    ui->PlotWidjet_1->graph(0)->addData(x,m_vol);
+    ui->PlotWidjet_2->graph(0)->addData(x,m_tin);
+    ui->PlotWidjet_3->graph(0)->addData(x,m_tout);
+
+    ui->PlotWidjet_1->yAxis->rescale(true);
+    ui->PlotWidjet_2->yAxis->rescale(true);
+    ui->PlotWidjet_3->yAxis->rescale(true);
+
+    ui->PlotWidjet_1->xAxis->setRange(m_vol.size() - N, m_vol.size());
+    ui->PlotWidjet_2->xAxis->setRange(m_vol.size() - N, m_vol.size());
+    ui->PlotWidjet_3->xAxis->setRange(m_vol.size() - N, m_vol.size());
+
+    ui->PlotHorizontalScrollBar->setRange(0, m_vol.size());
+
+    ui->PlotWidjet_1->replot();
+    ui->PlotWidjet_2->replot();
+    ui->PlotWidjet_3->replot();
 }
 
 void GraphsPlotter3::reset()

@@ -21,7 +21,8 @@ public:
 
 private slots:
     void on_pushButtonBack_clicked();
-
+    void setPatient();
+    void setNewResearch();
 private:
     Ui::MainWindow *ui;
     DBCOnnection m_db_connection;

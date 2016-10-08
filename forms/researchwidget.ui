@@ -117,7 +117,7 @@
    <item>
     <widget class="QFrame" name="managmentBox">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="minimumSize">
       <size>
@@ -167,7 +167,7 @@
       <item>
        <widget class="QPushButton" name="startExam">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="font">
          <font>
@@ -184,7 +184,7 @@
       <item>
        <widget class="QPushButton" name="stopExam">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="font">
          <font>
@@ -199,24 +199,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="resultsButton">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Результаты</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="printButton">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="font">
          <font>

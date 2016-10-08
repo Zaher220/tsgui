@@ -15,7 +15,7 @@ public:
     explicit ADCDataReader(QObject *parent = 0);
     ~ADCDataReader();
     int getSamples_number() const;
-    void setSamples_number(int samples_number);
+    void setSamples_number(int samples_number = 180000);
     bool isReady();
     QVector<int> getSamplesSinc(int channel, int samplesNumber);
 public slots:

@@ -51,5 +51,5 @@ void PatientResearchsList::setCurrentResearch(QModelIndex index)
 
 void PatientResearchsList::on_newExamButton_clicked()
 {
-
+    emit newResearch();
 }

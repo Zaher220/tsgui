@@ -2,6 +2,7 @@
 
 Ioton::Ioton(QObject *parent) : QObject(parent)
 {
+
     qRegisterMetaType<ADCData>("ADCData");
 
     this->moveToThread(&m_thread);
@@ -65,5 +66,6 @@ void Ioton::appendData(ADCData data)
 
 void Ioton::setSignalsAndParams(parameters params, ADCData data)
 {
+
     emit sendSignalsAndParams(params, data);
 }
