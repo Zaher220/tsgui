@@ -21,7 +21,6 @@ public:
 public slots:
     void startADC(int samples_number);
     void stopADC();
-    void processADC();
 signals:
     void finished();
     void newData( ADCData );
@@ -29,6 +28,7 @@ signals:
     void changeProgress(int);
     void started();
 private:
+    void processADC();
     bool initADC();
     void ShowThreadErrorMessage(void);
     void CleanupCrushADCInstance(QString ErrorString);
@@ -67,14 +67,14 @@ private:
     //max возможное кол-во передаваемых отсчетов (кратное 32) для ф. ReadData и WriteData()
     const DWORD CHANNEL_QUANTITY = 3;
     DWORD DataStep = 512 * CHANNEL_QUANTITY;
-    SHORT	ReadBuffer[512*3];//FIXME DEFINE ???
+    SHORT ReadBuffer[512*3];//FIXME DEFINE ???
 
     // номер ошибки при выполнении потока сбора данных
     WORD ThreadErrorNumber;
     // флажок завершения потоков ввода данных
     bool IsThreadComplete = false;
 
-    HANDLE hMutex ;
+    HANDLE hMutex;
     qint32 m_samples_number = -1;//1800000;//FIXME похоже попытка мерить время АЦП - это не верно
     qint32 m_samples_count = 0;
     char m_adc_name[8] ;

@@ -73,18 +73,6 @@ QVector<double > convertToDoubleVector(QVector<int> data){
     return result;
 }
 
-void GraphsPlotter3::setFullPatientGrapgicsData(VTT_Data data)
-{
-    this->reset();
-    QVector<QVector<double> > graph;
-    graph.push_back(convertToDoubleVector(data.volume));
-
-    graph.push_back(convertToDoubleVector(data.tempin));
-
-    graph.push_back(convertToDoubleVector(data.tempout));
-    this->appendData(graph);
-}
-
 QVector<double> convertToDoubleVector2(QVector<int> data){
     QVector<double> result;
     result.reserve(data.size());
@@ -94,96 +82,28 @@ QVector<double> convertToDoubleVector2(QVector<int> data){
     return result;
 }
 
-void GraphsPlotter3::appendData(QVector<QVector<double> > data)
-{
-    if( data.size() != 3 )
-        return;
-
-    m_vol.append(data[0]);
-    m_tin.append(data[1]);
-    m_tout.append(data[2]);
-
-    K = m_vol.size();
-    l = (double)N/K;
-    qDebug()<<"l="<<l;
-
-    QVector<double> x(m_vol.size());
-
-    for(int i = 0; i < x.size(); i++){
-        x[i] = i;
-    }
-
-    ui->PlotWidjet_1->graph(0)->addData(x,m_vol);
-    ui->PlotWidjet_2->graph(0)->addData(x,m_tin);
-    ui->PlotWidjet_3->graph(0)->addData(x,m_tout);
-
-    qDebug()<<"m_vol.size()="<<m_vol.size();
-
-    ui->PlotWidjet_1->yAxis->rescale(true);
-    ui->PlotWidjet_2->yAxis->rescale(true);
-    ui->PlotWidjet_3->yAxis->rescale(true);
-
-    ui->PlotWidjet_1->xAxis->setRange(m_vol.size() - N, m_vol.size());
-    ui->PlotWidjet_2->xAxis->setRange(m_vol.size() - N, m_vol.size());
-    ui->PlotWidjet_3->xAxis->setRange(m_vol.size() - N, m_vol.size());
-
-    ui->PlotHorizontalScrollBar->setRange(0, m_vol.size());
-    qDebug()<<"ui->PlotHorizontalScrollBar min"<<ui->PlotHorizontalScrollBar->minimum();
-    qDebug()<<"ui->PlotHorizontalScrollBar max"<<ui->PlotHorizontalScrollBar->maximum();
-    qDebug()<<"ui->PlotHorizontalScrollBar value"<<ui->PlotHorizontalScrollBar->value();
-
-    ui->PlotWidjet_1->replot();
-    ui->PlotWidjet_2->replot();
-    ui->PlotWidjet_3->replot();
-}
-
-void GraphsPlotter3::appendIntData(QVector<int> volume, QVector<int> tempin, QVector<int> tempout)
-{
-    //qDebug()<<"---getData adc"<<data.size();
-    QVector<QVector<double>> plotData;
-    QVector<QVector<int>> data;
-    data.push_back(volume);
-    data.push_back(tempin);
-    data.push_back(tempout);
-
-    plotData.resize(data.size());
-    for(int i=0; i<data.size(); i++){
-        QVector<double> dataGraph;
-        int axisSize = data.at(i).size();
-        qDebug()<<"--adc ch size"<<i<<axisSize;
-        dataGraph.resize( axisSize );
-        for(int n=0; n<axisSize; n++){
-            dataGraph[n] = static_cast<double> (data.at(i).at(n));
-            if(n==2 || n ==24)
-                qDebug()<<"n"<<n<<data.at(i).at(n)<<dataGraph.at(n);
-        }
-        plotData[i] = dataGraph;
-    }
-    this->appendData(plotData);
-    //m_plotter_widjet->appendData( plotData );
-}
-
 void GraphsPlotter3::appendADCData(ADCData data)
 {
     if( data.DATA_LEN != 3 )
         return;
-    m_vol.append(convertToDoubleVector2(data.data[0]));
-    m_tin.append(convertToDoubleVector2(data.data[1]));
-    m_tout.append(convertToDoubleVector2(data.data[2]));
 
-    K = m_vol.size();
-    l = (double)N/K;
-    qDebug()<<"l="<<l;
+    m_vol = data.data[0];
+    m_tin = data.data[0];
+    m_tout = data.data[0];
 
     QVector<double> x(m_vol.size());
 
-    for(int i = 0; i < x.size(); i++){
+    for(int i = 0; i < m_vol.size(); i++){
         x[i] = i;
     }
 
-    ui->PlotWidjet_1->graph(0)->addData(x,m_vol);
-    ui->PlotWidjet_2->graph(0)->addData(x,m_tin);
-    ui->PlotWidjet_3->graph(0)->addData(x,m_tout);
+    ui->PlotWidjet_1->graph(0)->setData(x, m_vol);
+    ui->PlotWidjet_2->graph(0)->setData(x, m_tin);
+    ui->PlotWidjet_3->graph(0)->setData(x, m_tout);
+
+    //    ui->PlotWidjet_1->graph(0)->addData(x,convertToDoubleVector2(data.data[0]));
+    //    ui->PlotWidjet_2->graph(0)->addData(x,convertToDoubleVector2(data.data[1]));
+    //    ui->PlotWidjet_3->graph(0)->addData(x,convertToDoubleVector2(data.data[2]));
 
     ui->PlotWidjet_1->yAxis->rescale(true);
     ui->PlotWidjet_2->yAxis->rescale(true);

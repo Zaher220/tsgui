@@ -19,7 +19,7 @@ public slots:
     void uploadDataAndFree();
 private:
     ADCData m_acqdata;
-    const quint16 M_SUMPLES_NUM = 10;
+    const quint16 M_SUMPLES_NUM = 2;
     quint16 m_samples_num = 0;
     QMutex m_mutex;
 };

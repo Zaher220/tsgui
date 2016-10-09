@@ -3,6 +3,8 @@
 ADCDataReader::ADCDataReader(QObject *parent):QObject(parent)
 {
     strcpy_s(m_adc_name, "usb3000");
+
+    connect(this, &ADCDataReader::started, this, &ADCDataReader::processADC);
 }
 
 ADCDataReader::~ADCDataReader()
@@ -193,8 +195,7 @@ bool ADCDataReader::initADC()
 
 bool ADCDataReader::WaitingForRequestCompleted(OVERLAPPED *ReadOv, LPDWORD byte_N)
 {
-    while (true)
-    {
+    while (true){
         if ( !is_acq_started )
             return false;
         if (GetOverlappedResult(ModuleHandle, ReadOv, byte_N, FALSE)){
@@ -221,7 +222,6 @@ void ADCDataReader::setSamples_number(int samples_number)
 {
     m_samples_number = samples_number;
 }
-
 
 //------------------------------------------------------------------------
 // Отобразим сообщение с ошибкой
@@ -269,23 +269,15 @@ void ADCDataReader::CleanupCrushADCInstance(QString ErrorString)
 {
     // подчищаем интерфейс модуля
     if (pModule){
-        // освободим интерфейс модуля
         if (!pModule->ReleaseInstance())
             printf(" ReleaseInstance() --> Bad\n");
         else
             printf(" ReleaseInstance() --> OK\n");
-        // обнулим указатель на интерфейс модуля
         pModule = NULL;
-    }
-    // освободим идентификатор потока сбора данных
-    if (hReadThread) {
-        CloseHandle(hReadThread);
-        hReadThread = NULL;
     }
     // выводим текст сообщения
     if ( ErrorString.length() > 0 )
         printf("%s",ErrorString.toStdString().c_str());
-
     else return;
 }
 
@@ -293,20 +285,21 @@ void ADCDataReader::startADC(int samples_number)
 {
     is_acq_started = true;
     setSamples_number(samples_number);
-    initADC();
+    if( !initADC()){
+        qDebug()<<"Error on start ";
+        emit finished();
+        return;
+    }
+
     // сбросим флаг ошибок потока ввода данных
     ThreadErrorNumber = 0x0;
-    connect(this, &ADCDataReader::started, this, &ADCDataReader::processADC);
     emit started();
 }
 
 void ADCDataReader::stopADC()
 {
     is_acq_started = false;
-
-    // подчищаем интерфейс модуля
     if (pModule != NULL){
-        // освободим интерфейс модуля
         if (!pModule->ReleaseInstance())
             printf(" ReleaseInstance() --> Bad\n");
         else
@@ -324,7 +317,6 @@ void ADCDataReader::processADC()
     HANDLE ReadEvent[2];
     // массив OVERLAPPED структур из двух элементов
     OVERLAPPED ReadOv[2];
-
     DWORD BytesTransferred[2];
 
     // остановим ввод данных и одновременно прочистим соответствующий канал bulk USB
@@ -334,7 +326,6 @@ void ADCDataReader::processADC()
     }
     if (!pModule->STOP_READ()) {
         ThreadErrorNumber = 0x6;
-        IsThreadComplete = true;
         emit finished();
         return;
     }
@@ -352,24 +343,20 @@ void ADCDataReader::processADC()
             CloseHandle(ReadEvent[0]);
             CloseHandle(ReadEvent[1]);
             ThreadErrorNumber = 0x2;
-            IsThreadComplete = true;
             emit finished();
             return;
         }
 
     // теперь запускаем ввод данных
-
-    if (pModule->START_READ())
-    {
+    if (pModule->START_READ()){
         // цикл сбора данных
         i = 0;
         m_samples_count = 0;
-        ADCData data;
 
         while (is_acq_started && (m_samples_number == -1 || m_samples_count <= m_samples_number) ){
             RequestNumber ^= 0x1;
             // сделаем запрос на очередную порции данных
-            if (!pModule->ReadData(ReadBuffer /*!!!+ i*DataStep*/, &DataStep, &BytesTransferred[RequestNumber], &ReadOv[RequestNumber]))
+            if (!pModule->ReadData(ReadBuffer, &DataStep, &BytesTransferred[RequestNumber], &ReadOv[RequestNumber]))
                 if (GetLastError() != ERROR_IO_PENDING) {
                     ThreadErrorNumber = 0x2;
                     break;
@@ -378,21 +365,19 @@ void ADCDataReader::processADC()
             if (!WaitingForRequestCompleted(&ReadOv[RequestNumber ^ 0x1], &BytesTransferred[RequestNumber])){
                 break;
             }
-
-            qDebug()<<"RequestNumber"<<RequestNumber;
-            qDebug()<<"BytesTransferred"<< BytesTransferred[RequestNumber]<<DataStep;
-
-            if(i >= 1){
-                for (int k = 0; k < DataStep/*!!!BytesTransferred[RequestNumber]*/; k += CHANNEL_QUANTITY){ //FIXME нужно получать 1 точку из 10 усреднением
+            if(i > 1){
+                ADCData data;
+                for (uint k = 0; k < DataStep; k += CHANNEL_QUANTITY){ //FIXME нужно получать 1 точку из 10 усреднением
                     data.data[0].append(ReadBuffer[k]);
                     data.data[1].append(ReadBuffer[k+1]);
                     data.data[2].append(ReadBuffer[k+2]);
                 }
                 m_samples_count += data.data[0].size();
-                memset(ReadBuffer, 0, /*!!!NBlockRead **/ DataStep );
+                memset(ReadBuffer, 0, DataStep);
                 emit newData(data);
-                data.clear();
+                //data.clear();
             }
+            //qDebug()<<"m_samples_count "<<m_samples_count;
             i++;
         }
         // ждём окончания операции сбора последней порции данных
@@ -409,7 +394,7 @@ void ADCDataReader::processADC()
         emit finished();
         return;
     }
-    // остановим ввод данных
+
     if (!pModule->STOP_READ())
         ThreadErrorNumber = 0x6;
     // если надо, то прервём незавершённый асинхронный запрос
@@ -418,12 +403,6 @@ void ADCDataReader::processADC()
     // освободим все идентификаторы событий
     for (i = 0x0; i < 0x2; i++)
         CloseHandle(ReadEvent[i]);
-    // небольшая задержка
-    Sleep(100);
-    // установим флажок окончания потока сбора данных
-    IsThreadComplete = true;
-    // теперь можно воходить из потока сбора данных
-
     emit finished();
     return;
 }
@@ -431,7 +410,7 @@ void ADCDataReader::processADC()
 bool ADCDataReader::isReady()
 {
     return true;
-    if( initADC()){
+    if( initADC() ){
         CleanupCrushADCInstance("On test init");
         return true;
     }else
@@ -441,9 +420,7 @@ bool ADCDataReader::isReady()
 QVector<int> ADCDataReader::getSamplesSinc(int channel, int samplesNumber)
 {
     is_acq_started = true;
-
     stopADC();
-
     if ( !initADC())
         return QVector<int>();
 

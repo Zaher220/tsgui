@@ -29,7 +29,7 @@ void ResearchWidget::setPatiendId(int pid)
 
 void ResearchWidget::on_startExam_clicked()
 {
-    m_device.beginResearch();
+    m_device.beginResearch(180000);
 }
 
 void ResearchWidget::on_stopExam_clicked()

@@ -38,17 +38,22 @@ void SignalAnalyzer::setFinderPrefs(FinderPrefs prefs)
 
 void SignalAnalyzer::setADCData(ADCData data)
 {
-    m_adc_data = data;
-    if( m_adc_data.data[0].size() != 0 ){
-        this->addMultiplyRawData(m_adc_data.data[0], m_adc_data.data[0], m_adc_data.data[0]);
-    }
+    m_adc_data += data;
+    this->processRawData();
+//    if( m_adc_data.data[0].size() != 0 ){
+//        this->addMultiplyRawData(m_adc_data.data[0], m_adc_data.data[0], m_adc_data.data[0]);
+//    }
 }
 
-void SignalAnalyzer::addRawData(QVector<int> *signal)
+void SignalAnalyzer::processRawData()
 {
     int start = 0;
-    m_raw_signal = m_adc_data.data[0];
-    m_median_signal = median(m_raw_signal, m_period);
+    //m_raw_signal = m_adc_data.data[0];
+    m_median_signal = median(m_adc_data.data[0], m_period, 0);
+//    if( start - m_period < 0 )
+//        m_median_signal = median(m_raw_signal, m_period, 0);
+//    else
+//        m_median_signal = median(m_raw_signal, m_period, start - m_period);
 
 
 //    FILE * out = nullptr;
@@ -62,26 +67,12 @@ void SignalAnalyzer::addRawData(QVector<int> *signal)
 //        fclose(out);
 
     m_clean_signal = this->clearSignal(m_median_signal);
-    qDebug()<<"m_raw_signal.size() "<<m_raw_signal.size();
-    qDebug()<<"m_median_signal.size() "<<m_median_signal.size();
-    qDebug()<<"m_clean_signal.size() "<<m_clean_signal.size();
+//    qDebug()<<"m_raw_signal.size() "<<m_raw_signal.size();
+//    qDebug()<<"m_median_signal.size() "<<m_median_signal.size();
+//    qDebug()<<"m_clean_signal.size() "<<m_clean_signal.size();
     this->findExhalations(start);
 
     emit Inhalations(m_ings, m_adc_data);
-}
-
-void SignalAnalyzer::addMultiplyRawData(QVector<int> volume, QVector<int> tempin, QVector<int> tempout)
-{
-    this->addRawData(&volume);
-}
-
-void SignalAnalyzer::setFullPatientData(VTT_Data data)
-{
-    this->reset();
-    QVector<int> vec;
-    for(int i=0;i<data.volume.size();i++)
-        vec.push_back(data.volume.at(i)+zero_level);
-    this->addRawData(&vec);
 }
 
 void SignalAnalyzer::reset()
@@ -93,13 +84,17 @@ void SignalAnalyzer::reset()
     m_ings.clear();
 }
 
-QVector<double> SignalAnalyzer::median(const QVector<int> signal, const size_t period)
+QVector<double> SignalAnalyzer::median(const QVector<double> signal, const size_t period, const size_t start )
 {
     double med = 0;//знаение медианы
-    QVector<int> temp;//Временный массив для сортировки данных которым расчитывается медиана
+    QVector<double> temp;//Временный массив для сортировки данных которым расчитывается медиана
     temp.reserve(static_cast<int>(period));
     QVector<double> result;
     result.reserve(signal.size());
+
+    for(size_t i = 0 ; i < period; i++){
+        result.push_back(signal[i]);
+    }
 
     for(size_t i = period; i < static_cast<size_t>(signal.size()); i++){
         for(size_t k = i - period; k < i; k++)
@@ -151,7 +146,7 @@ void SignalAnalyzer::integrateSignal(size_t start)
 
 void SignalAnalyzer::findExhalations(size_t start)
 {
-    QMutexLocker locker(&m_mutex);
+    //QMutexLocker locker(&m_mutex);
     auto findStartIndex = [](QVector<double> * data, size_t start_pos, size_t zero_count ){
         if( data->size() - (int)zero_count < 0 )
             return -1;

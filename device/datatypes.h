@@ -9,16 +9,9 @@ struct Calibrations{
     int c;
 };
 
-struct VTT_Data{
-    QVector<int> volume,tempin, tempout;
-    int volZero;
-    int volOut;
-    int volIn;
-};
-
 struct ADCData{
     static const int DATA_LEN = 3;
-    QVector<int> data[DATA_LEN];
+    QVector<double> data[DATA_LEN];
     void clear(){
         for(size_t i = 0; i < DATA_LEN; i++){
             data[i].clear();
