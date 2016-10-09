@@ -367,15 +367,27 @@ void ADCDataReader::processADC()
             }
             if(i > 1){
                 ADCData data;
+                double av1,av2,av3;
+                double sum1,sum2,sum3;
                 for (uint k = 0; k < DataStep; k += CHANNEL_QUANTITY){ //FIXME нужно получать 1 точку из 10 усреднением
-                    data.data[0].append(ReadBuffer[k]);
-                    data.data[1].append(ReadBuffer[k+1]);
-                    data.data[2].append(ReadBuffer[k+2]);
+                    sum1+=ReadBuffer[k];
+                    sum2+=ReadBuffer[k+1];
+                    sum3+=ReadBuffer[k+2];
+                    if( k%FREQUANCY_DEVIDER == 0 && k!=0 ){
+                        av1 = sum1 / FREQUANCY_DEVIDER;
+                        av2 = sum2 / FREQUANCY_DEVIDER;
+                        av3 = sum3 / FREQUANCY_DEVIDER;
+                        data.data[0].append(av1);
+                        data.data[1].append(av2);
+                        data.data[2].append(av3);
+                        sum1=0;
+                        sum2=0;
+                        sum3=0;
+                    }
                 }
-                m_samples_count += data.data[0].size();
+                m_samples_count += DataStep/3;
                 memset(ReadBuffer, 0, DataStep);
                 emit newData(data);
-                //data.clear();
             }
             //qDebug()<<"m_samples_count "<<m_samples_count;
             i++;

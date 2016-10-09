@@ -5,9 +5,8 @@ Ioton::Ioton(QObject *parent) : QObject(parent)
 
     qRegisterMetaType<ADCData>("ADCData");
 
-    //this->moveToThread(&m_thread);
     adc = new ADCDataReader();
-    adc->moveToThread(&m_thread);
+
 
     m_signal_converter = new SignalConverter();
     m_hoarder = new DataHoarder();
@@ -21,11 +20,16 @@ Ioton::Ioton(QObject *parent) : QObject(parent)
     connect(adc, &ADCDataReader::newData, m_signal_converter, &SignalConverter::setADCData);
     connect(m_signal_converter, &SignalConverter::sendADCData, m_hoarder , &DataHoarder::setADCData);
     connect(adc, &ADCDataReader::finished, m_hoarder, &DataHoarder::uploadDataAndFree);
-    connect(m_hoarder, &DataHoarder::sendADCData, m_analyzer, &SignalAnalyzer::setADCData);
+    connect(m_hoarder, &DataHoarder::sendADCData, this, &Ioton::setSignals);
+    //connect(m_hoarder, &DataHoarder::sendADCData, m_analyzer, &SignalAnalyzer::setADCData);
+
+
     connect(m_analyzer, &SignalAnalyzer::Inhalations, m_calculator, &VolumeValuesCalc::setIngs);
     connect(m_calculator, &VolumeValuesCalc::signalParameters, m_calibrator, &Calibrator::signalAndParams);
-    connect(m_calibrator, &Calibrator::SignalsParams, this, &Ioton::setSignalsAndParams);
+    //connect(m_calibrator, &Calibrator::SignalsParams, this, &Ioton::setSignalsAndParams);
 
+    this->moveToThread(&m_analyze_thread);
+    adc->moveToThread(&m_thread);
     m_hoarder->moveToThread(&m_analyze_thread);
     m_analyzer->moveToThread(&m_analyze_thread);
     m_calculator->moveToThread(&m_analyze_thread);
@@ -56,6 +60,7 @@ void Ioton::beginResearch(int msecs)
 
 void Ioton::endResearch()
 {
+    adc->stopADC();
     emit stopMeas();
 }
 
@@ -67,4 +72,9 @@ void Ioton::appendData(ADCData data)
 void Ioton::setSignalsAndParams(parameters params, ADCData data)
 {
     emit sendSignalsAndParams(params, data);
+}
+
+void Ioton::setSignals(ADCData data)
+{
+    emit sendSignals(data);
 }

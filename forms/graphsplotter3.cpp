@@ -21,6 +21,8 @@ GraphsPlotter3::GraphsPlotter3(QWidget *parent) :
 
     ui->PlotWidjet_3->axisRect()->setupFullAxesBox(true);
     ui->PlotWidjet_3->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+
+
     /* ui->PlotWidjet_1->addGraph();
     ui->PlotWidjet_1->graph()->setPen(QPen(Qt::blue));
     ui->PlotWidjet_1->graph()->setBrush(QBrush(QColor(0, 0, 255, 20)));
@@ -87,23 +89,25 @@ void GraphsPlotter3::appendADCData(ADCData data)
     if( data.DATA_LEN != 3 )
         return;
 
+    int start = m_vol.size();
+    int diff = data.data[0].size() - m_vol.size();
+    qDebug()<<"start "<<start;
+    qDebug()<<"diff "<<diff;
+
+
     m_vol = data.data[0];
-    m_tin = data.data[0];
-    m_tout = data.data[0];
+    m_tin = data.data[1];
+    m_tout = data.data[2];
 
-    QVector<double> x(m_vol.size());
+    QVector<double> x;
 
-    for(int i = 0; i < m_vol.size(); i++){
-        x[i] = i;
+    for(int i = start; i < start + diff; i++){
+        x.append(i);
     }
 
-    ui->PlotWidjet_1->graph(0)->setData(x, m_vol);
-    ui->PlotWidjet_2->graph(0)->setData(x, m_tin);
-    ui->PlotWidjet_3->graph(0)->setData(x, m_tout);
-
-    //    ui->PlotWidjet_1->graph(0)->addData(x,convertToDoubleVector2(data.data[0]));
-    //    ui->PlotWidjet_2->graph(0)->addData(x,convertToDoubleVector2(data.data[1]));
-    //    ui->PlotWidjet_3->graph(0)->addData(x,convertToDoubleVector2(data.data[2]));
+    ui->PlotWidjet_1->graph(0)->addData(x, m_vol.mid(start));
+    ui->PlotWidjet_2->graph(0)->addData(x, m_tin.mid(start));
+    ui->PlotWidjet_3->graph(0)->addData(x, m_tout.mid(start));
 
     ui->PlotWidjet_1->yAxis->rescale(true);
     ui->PlotWidjet_2->yAxis->rescale(true);
@@ -136,4 +140,5 @@ void GraphsPlotter3::initGraphs(QCustomPlot *graph, QPen pen)
     graph->graph()->setPen(pen);
     graph->graph()->setBrush(QBrush(QColor(0, 0, 255, 20)));
     graph->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+
 }

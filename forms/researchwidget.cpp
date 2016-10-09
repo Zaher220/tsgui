@@ -7,6 +7,7 @@ ResearchWidget::ResearchWidget(QWidget *parent) :
 {
     ui->setupUi(this);
     connect(&m_device, &Ioton::sendSignalsAndParams, this, &ResearchWidget::setSignalsAndParams);
+    connect(&m_device, &Ioton::sendSignals, this, &ResearchWidget::setSensorSignals);
     ui->verticalLayoutAllPlotter->addWidget(&m_gpkotter);
     //m_gpkotter.appendData()
 }
@@ -49,5 +50,5 @@ void ResearchWidget::setPramsToWidget(parameters params)
 
 void ResearchWidget::setSensorSignals(ADCData data)
 {
-    ;
+    m_gpkotter.appendADCData(data);
 }

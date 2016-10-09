@@ -22,12 +22,14 @@ signals:
     void startMeas(int samples_num = 0);
     void stopMeas();
     void sendSignalsAndParams(parameters params, ADCData data);
+    void sendSignals(ADCData data);
 public slots:
     void beginResearch(int msecs = 0);
     void endResearch();
     void appendData(ADCData data);
 private slots:
     void setSignalsAndParams(parameters params, ADCData data);
+    void setSignals(ADCData data);
 private:
     QThread m_thread, m_adc_thread, m_analyze_thread;
     ADCDataReader *adc = nullptr;
